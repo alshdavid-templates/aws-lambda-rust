@@ -1,0 +1,29 @@
+name: Release
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+on: 
+  push:
+    branches:
+      - "main"
+
+jobs:
+  deploy:
+    name: "🐥 Build"
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-southeast-2
+      GLOBAL_PREFIX: alshdavid
+      PROJECT_NAME: aws_lambda_rust
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Setup"
+        run: bash .github/scripts/prelude.bash
+      - name: "Build"
+        run: bash .github/scripts/build.bash
+      - name: "Deploy"
+        run: bash .github/scripts/deploy.bash
