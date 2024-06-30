@@ -1,9 +1,17 @@
 #!/bin/bash
+set -e
+
 STARTING_PWD="$PWD"
 
 mkdir -p $HOME/.local
 
+## Global
+export CC=aarch64-linux-gnu-gcc
+sudo apt-get update
+sudo apt-get install -y curl wget unzip gcc-aarch64-linux-gnu build-essential
+
 ## Install Rust
+rm -rf $HOME/.local/rust
 mkdir $HOME/.local/rust
 cd $HOME/.local/rust
 
@@ -17,9 +25,11 @@ export PATH="${HOME}/.local/rust/cargo/bin:$PATH"
 echo "${HOME}/.local/rust/cargo/bin" >> $GITHUB_PATH
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
-rustup target add x86_64-unknown-linux-musl
+# rustup target add x86_64-unknown-linux-musl
+rustup target add aarch64-unknown-linux-musl
 
 ## Install AWS CLI
+rm -rf $HOME/.local/aws
 mkdir $HOME/.local/aws
 cd $HOME/.local/aws
 
@@ -31,6 +41,7 @@ export PATH="${HOME}/.local/aws/bin:${PATH}"
 echo "${HOME}/.local/aws/bin" >> $GITHUB_PATH
 
 ## Install Terraform
+rm -rf $HOME/.local/terraform
 mkdir $HOME/.local/terraform
 cd $HOME/.local/terraform
 
